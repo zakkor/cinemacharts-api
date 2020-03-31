@@ -6,8 +6,9 @@ const { MongoClient, ObjectID } = require('mongodb')
 
 const app = new Koa()
 const router = new Router()
-const uri = 'mongodb://mescal:27017'
+const uri = 'mongodb://mongo:27017'
 const client = new MongoClient(uri, { useUnifiedTopology: true })
+const port = 8080
 
 // Will be set in connect()
 let db = null
@@ -65,6 +66,6 @@ app
   .use(router.allowedMethods());
 
 connect('test').catch(console.error).then(() => {
-  console.log("Listening on :3000...")
-  app.listen(3000)
+  console.log(`Listening on :${port}...`)
+  app.listen(port)
 })

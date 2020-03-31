@@ -2,7 +2,7 @@
   "name": "cinemacharts-api",
   "version": "0.0.0",
   "description": "",
-  "main": "api.js",
+  "main": "server.js",
   "dependencies": {
     "@koa/cors": "^2.2.3",
     "koa": "^2.11.0",
@@ -12,7 +12,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "node api.js"
+    "start": "node server.js"
   },
   "author": "",
   "license": "ISC"
