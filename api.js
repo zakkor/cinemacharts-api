@@ -7,7 +7,7 @@ const { MongoClient, ObjectID } = require('mongodb')
 const app = new Koa()
 const router = new Router()
 const uri = 'mongodb://mescal:27017'
-const client = new MongoClient(uri)
+const client = new MongoClient(uri, { useUnifiedTopology: true })
 
 // Will be set in connect()
 let db = null
