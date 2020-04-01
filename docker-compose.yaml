@@ -1,4 +1,4 @@
-version: "2"
+version: "3"
 services:
   cinemacharts:
     build: .
@@ -8,5 +8,9 @@ services:
       - mongo
   mongo:
     image: mongo
+    volumes:
+      - mongo-data:/data/db
     ports:
       - "27017:27017"
+volumes:
+  mongo-data:
