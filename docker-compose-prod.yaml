@@ -3,14 +3,11 @@ services:
   cinemacharts:
     build:
       context: .
-      dockerfile: Dockerfile
-    volumes:
-      - ".:/usr/src/cinemacharts"
+      dockerfile: Dockerfile-prod
     ports:
       - "8080:8080"
     depends_on:
       - mongo
-    command: "npm run dev"
   mongo:
     image: mongo
     volumes:

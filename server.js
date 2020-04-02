@@ -42,7 +42,7 @@ router.get('/person/:id', async ctx => {
 router.get('/search/:name', async ctx => {
   const name = ctx.params.name
 
-  const cur = await db.collection('actormovies').find({ 'actor.name': new RegExp(`${name}`, 'i')}, { projection: { movies: 0, 'actor.imdb_id': 0 } })
+  const cur = await db.collection('actors').find({ name: new RegExp(`${name}`, 'i')})
   const res = await cur.toArray()
   if (res === null) {
     ctx.status = 404
