@@ -2,6 +2,7 @@ const Koa = require('koa')
 const Router = require('koa-router')
 const cors = require('@koa/cors')
 const ratelimit = require('koa-ratelimit')
+const logger = require('koa-logger')
 const { MongoClient, ObjectID } = require('mongodb')
 
 const app = new Koa()
@@ -18,7 +19,21 @@ async function connect(dbname) {
   db = client.db(dbname)
 }
 
-router.get('/person/:id', async ctx => {
+app
+  .use(logger())
+  .use(cors())
+  .use(ratelimit({
+    driver: 'memory',
+    db: new Map(),
+    duration: 60000,
+    errorMessage: 'You are being rate-limited, slow down.',
+    id: ctx => ctx.ip,
+    max: 100,
+  }))
+  .use(router.routes())
+  .use(router.allowedMethods());
+
+router.get('/api/person/:id', async ctx => {
   let id = null
   try {
     id = new ObjectID(ctx.params.id)
@@ -39,7 +54,7 @@ router.get('/person/:id', async ctx => {
 })
 
 
-router.get('/search/:name', async ctx => {
+router.get('/api/search/:name', async ctx => {
   const name = ctx.params.name
 
   const cur = await db.collection('actors').find({ name: new RegExp(`${name}`, 'i')})
@@ -51,19 +66,6 @@ router.get('/search/:name', async ctx => {
   
   ctx.body = JSON.stringify(res) 
 })
-
-app
-  .use(cors())
-  .use(ratelimit({
-    driver: 'memory',
-    db: new Map(),
-    duration: 60000,
-    errorMessage: 'You are being rate-limited, slow down.',
-    id: ctx => ctx.ip,
-    max: 100,
-  }))
-  .use(router.routes())
-  .use(router.allowedMethods());
 
 connect('test').catch(console.error).then(() => {
   console.log(`Listening on :${port}...`)
