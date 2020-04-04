@@ -53,6 +53,18 @@ router.get('/api/person/:id', async ctx => {
   ctx.body = JSON.stringify(res)
 })
 
+// Returns 6 random people
+router.get('/api/randompeople', async ctx => {
+  const cur = await db.collection('actors').aggregate([{ $sample: { size: 6 } }])
+  const res = await cur.toArray()
+  if (res === null) {
+    ctx.status = 404
+    return
+  }
+
+  ctx.body = JSON.stringify(res)
+})
+
 
 router.get('/api/search/:name', async ctx => {
   const name = ctx.params.name
